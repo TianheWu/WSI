@@ -8,11 +8,18 @@ class WSI(torch.utils.data.Dataset):
         super(WSI, self).__init__()
         self.dataset_path = dataset_path
         self.dataset_name, self.class_label_list = [], []
+
+        file_name_list = []
+        filenames = os.listdir(dataset_path)
+        for file in filenames:
+            file_name_list.append(file)
+
         with open(label_file_path, 'r') as listFile:
             for line in listFile:
                 name, class_label = line[:-1].split(":")
-                self.dataset_name.append(name)
-                self.class_label_list.append(class_label)
+                if name in file_name_list:
+                    self.dataset_name.append(name)
+                    self.class_label_list.append(class_label)
     
     def img_init_process(self, x):
         x = cv2.cvtColor(x, cv2.COLOR_BGR2RGB)
